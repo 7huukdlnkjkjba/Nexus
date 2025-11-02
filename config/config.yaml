@@ -1,0 +1,223 @@
+# Nexus 项目主配置文件
+# 全局配置设置，支持环境变量替换（使用 ${ENV_VAR} 语法）
+
+# 项目基本配置
+project:
+  name: "Nexus"
+  description: "全球博弈模拟与策略超前推演引擎"
+  version: "1.0.0"
+  debug: false  # 是否启用调试模式
+  log_level: "INFO"  # 日志级别：DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+# 模拟引擎配置
+simulation:
+  mode: "standard"  # 模拟模式：standard, accelerated, detailed
+  default_start_year: 2024  # 默认起始年份
+  default_end_year: 2050  # 默认结束年份
+  time_step: 1  # 时间步长（年）
+  parallel: true  # 是否启用并行计算
+  max_threads: 8  # 最大线程数
+  worldline_count: 1000  # 默认世界线数量
+  survival_threshold: 0.05  # 世界线生存阈值
+
+# 随机数生成配置
+random:
+  seed: null  # 全局随机种子，null表示自动生成
+  use_deterministic: true  # 是否使用确定性随机
+  entropy_sources: 3  # 熵源数量
+
+# 数据配置
+data:
+  base_dir: "./data"  # 数据存储基础目录
+  auto_update: true  # 是否自动更新数据
+  update_interval_hours: 24  # 数据更新间隔（小时）
+  validate_on_load: true  # 加载时是否验证数据
+  max_history_years: 50  # 最大历史数据年限
+
+# 缓存配置
+cache:
+  enabled: true  # 是否启用缓存
+  strategy: "lru"  # 缓存策略：lru, lfu, fifo, ttl
+  storage_type: "memory"  # 存储类型：memory, file, redis
+  max_size: 10000  # 最大缓存项数
+  max_memory_mb: 1024  # 最大内存使用（MB）
+  default_ttl: 3600  # 默认过期时间（秒）
+  cache_dir: "./cache"  # 文件缓存目录
+  compress: false  # 是否压缩缓存
+
+# 模型配置
+models:
+  economic:
+    enabled: true
+    complexity_level: "medium"  # low, medium, high
+    forecast_accuracy: 0.85  # 预测准确度权重
+  political:
+    enabled: true
+    complexity_level: "high"
+    stability_threshold: 0.6
+  technological:
+    enabled: true
+    complexity_level: "medium"
+    innovation_rate: 0.7
+  climate:
+    enabled: true
+    complexity_level: "medium"
+    sensitivity: 0.75
+
+# 交互模型配置
+interaction:
+  enabled: true
+  feedback_strength: 0.5  # 反馈强度
+  cascade_effects: true  # 是否启用级联效应
+  nonlinear_factor: 0.3  # 非线性因子
+  max_interaction_depth: 3  # 最大交互深度
+
+# 洞察提取配置
+insight:
+  pattern_recognition: true
+  trend_detection: true
+  tipping_point_analysis: true
+  risk_assessment: true
+  opportunity_identification: true
+  confidence_threshold: 0.7  # 置信度阈值
+
+# 性能监控配置
+metrics:
+  enabled: true
+  collect_interval: 60  # 收集间隔（秒）
+  track_memory: true  # 是否跟踪内存使用
+  track_cpu: true  # 是否跟踪CPU使用
+  log_performance: false  # 是否记录性能日志
+
+# API配置（预留）
+api:
+  enabled: false
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["*"]
+  rate_limit: 100  # 每分钟请求限制
+
+# 可视化配置（预留）
+visualization:
+  enabled: false
+  default_theme: "light"
+  auto_refresh: true
+  refresh_interval: 5  # 刷新间隔（秒）
+
+# 分布式配置（预留）
+distributed:
+  enabled: false
+  master_address: "localhost:8786"
+  worker_count: 4
+  use_dask: false
+  use_ray: false
+
+# 安全配置
+security:
+  api_keys_enabled: false
+  encryption_enabled: false
+  sensitive_data_masking: true
+  log_sanitization: true
+
+# 错误处理配置
+errors:
+  retry_enabled: true
+  max_retries: 3
+  retry_delay: 1.0  # 初始重试延迟（秒）
+  exponential_backoff: true
+  fail_silently: false
+
+# 通知配置（预留）
+notifications:
+  enabled: false
+  email_enabled: false
+  slack_enabled: false
+  alert_threshold: 0.9  # 告警阈值
+
+# 资源限制
+resources:
+  max_memory_percent: 80  # 最大内存使用率
+  max_cpu_percent: 90  # 最大CPU使用率
+  disk_space_threshold_gb: 10  # 磁盘空间阈值（GB）
+
+# 扩展性配置
+plugins:
+  enabled: false
+  directory: "./plugins"
+  auto_load: false
+
+# 国际化配置
+localization:
+  default_language: "en"
+  available_languages: ["en", "zh"]
+  use_system_locale: true
+
+# 环境变量映射（示例）
+env_mapping:
+  api_key: "NEXUS_API_KEY"
+  database_url: "NEXUS_DATABASE_URL"
+  redis_url: "NEXUS_REDIS_URL"
+
+# 配置验证规则
+validation:
+  required_sections: ["project", "simulation", "models"]
+  max_worldline_count: 10000
+  min_survival_threshold: 0.01
+  max_survival_threshold: 1.0
+
+# 部署配置
+deployment:
+  environment: "development"  # development, staging, production
+  containerized: false
+  auto_restart: false
+  health_check_enabled: true
+  health_check_interval: 30  # 健康检查间隔（秒）
+
+# 调试配置
+debug:
+  trace_execution: false
+  dump_states: false
+  log_state_changes: false
+  profile_performance: false
+  export_intermediates: false
+
+# 兼容性配置
+compatibility:
+  legacy_support: false
+  backward_compatible: true
+  min_python_version: "3.9"
+  recommended_python_version: "3.10"
+
+# 文档配置
+documentation:
+  generate_api_docs: false
+  docs_output_dir: "./docs/api"
+  include_internal: false
+
+# 备份配置
+backup:
+  enabled: false
+  interval_days: 7
+  retention_days: 30
+  backup_dir: "./backups"
+  compress_backups: true
+
+# 实验特性
+experimental:
+  enabled: false
+  new_features: []
+  beta_models: []
+  risk_level: "low"  # low, medium, high
+
+# 元数据
+meta:
+  last_updated: "2024-01-01T00:00:00Z"
+  config_version: "1.0"
+  schema_version: "1.0"
+  generated_by: "Nexus Config Generator"
+  comments:
+    - "This is the main configuration file for Nexus"
+    - "Use environment variables for sensitive information"
+    - "Update simulation.worldline_count based on available resources"
+    - "Set cache.storage_type to 'file' for persistence across restarts"
+    - "Adjust models.*.complexity_level for performance tuning"

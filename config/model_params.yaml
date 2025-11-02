@@ -1,0 +1,519 @@
+# Nexus 项目模型参数配置文件
+# 各领域模型的详细参数设置
+
+# 经济模型参数
+economic_model:
+  # 宏观经济参数
+  macro:
+    gdp_growth_base_rate: 0.025  # 基础GDP增长率
+    inflation_base_rate: 0.02  # 基础通胀率
+    interest_rate_base: 0.035  # 基础利率
+    unemployment_base_rate: 0.05  # 基础失业率
+    productivity_growth_rate: 0.015  # 生产力增长率
+    
+  # 产业参数
+  industries:
+    - name: "agriculture"
+      gdp_percentage: 0.05
+      labor_percentage: 0.1
+      growth_volatility: 0.01
+      climate_sensitivity: 0.8
+    - name: "manufacturing"
+      gdp_percentage: 0.2
+      labor_percentage: 0.25
+      growth_volatility: 0.03
+      tech_sensitivity: 0.7
+    - name: "services"
+      gdp_percentage: 0.65
+      labor_percentage: 0.6
+      growth_volatility: 0.02
+      tech_sensitivity: 0.5
+    - name: "energy"
+      gdp_percentage: 0.08
+      labor_percentage: 0.04
+      growth_volatility: 0.04
+      climate_sensitivity: 0.6
+      political_sensitivity: 0.9
+    - name: "tech"
+      gdp_percentage: 0.07
+      labor_percentage: 0.03
+      growth_volatility: 0.06
+      tech_sensitivity: 0.9
+  
+  # 消费参数
+  consumption:
+    marginal_propensity_to_consume: 0.7
+    luxury_goods_threshold: 0.8  # 收入比例阈值
+    savings_rate_base: 0.15
+    
+  # 投资参数
+  investment:
+    capital_formation_rate: 0.25
+    roi_volatility: 0.1
+    risk_premium_base: 0.03
+    
+  # 贸易参数
+  trade:
+    exports_percentage_base: 0.2
+    imports_percentage_base: 0.22
+    tariff_base_rate: 0.02
+    trade_volatility: 0.05
+    
+  # 债务参数
+  debt:
+    government_debt_to_gdp_base: 0.6
+    corporate_debt_to_gdp_base: 0.8
+    household_debt_to_gdp_base: 0.5
+    debt_crisis_threshold: 1.5
+  
+  # 危机参数
+  crisis:
+    recession_probability_base: 0.02
+    depression_probability_base: 0.005
+    recovery_time_mean: 3.5  # 年
+    
+  # 技术影响参数
+  tech_impact:
+    productivity_multiplier: 1.2
+    disruption_probability: 0.1
+    
+  # 气候影响参数
+  climate_impact:
+    extreme_weather_economic_damage: 0.01
+    transition_cost_percentage: 0.02
+
+# 政治模型参数
+political_model:
+  # 政治制度类型
+  systems:
+    - name: "democracy"
+      stability_base: 0.75
+      change_probability: 0.15
+      response_time: 2  # 年
+    - name: "autocracy"
+      stability_base: 0.8
+      change_probability: 0.2
+      response_time: 1  # 年
+    - name: "hybrid"
+      stability_base: 0.65
+      change_probability: 0.25
+      response_time: 1.5  # 年
+  
+  # 社会稳定性参数
+  social_stability:
+    gini_coefficient_base: 0.4
+    social_unrest_threshold: 0.6
+    migration_impact_factor: 0.2
+    
+  # 冲突参数
+  conflict:
+    internal_conflict_probability_base: 0.05
+    external_conflict_probability_base: 0.03
+    escalation_probability: 0.1
+    resolution_time_mean: 2  # 年
+    
+  # 国际关系参数
+  international_relations:
+    cooperation_base_rate: 0.5
+    alliance_stability: 0.7
+    diplomatic_tension_volatility: 0.1
+    
+  # 政策参数
+  policy:
+    policy_change_frequency: 0.3  # 每届政府
+    regulation_tightening_rate: 0.05
+    deregulation_rate: 0.03
+    
+  # 经济影响参数
+  economic_impact:
+    policy_uncertainty_impact: 0.1
+    regulation_cost_percentage: 0.03
+    
+  # 技术影响参数
+  tech_impact:
+    surveillance_effect_on_stability: 0.2
+    information_flow_effect: 0.3
+    
+  # 气候影响参数
+  climate_impact:
+    climate_priority_weight: 0.4
+    climate_policy_response_time: 3  # 年
+
+# 技术模型参数
+technological_model:
+  # 技术类别
+  categories:
+    - name: "information_technology"
+      innovation_rate_base: 0.15
+      adoption_rate_base: 0.2
+      maturity_threshold: 0.7
+    - name: "artificial_intelligence"
+      innovation_rate_base: 0.25
+      adoption_rate_base: 0.15
+      maturity_threshold: 0.5
+    - name: "biotechnology"
+      innovation_rate_base: 0.12
+      adoption_rate_base: 0.1
+      maturity_threshold: 0.6
+    - name: "renewable_energy"
+      innovation_rate_base: 0.18
+      adoption_rate_base: 0.25
+      maturity_threshold: 0.65
+    - name: "advanced_manufacturing"
+      innovation_rate_base: 0.1
+      adoption_rate_base: 0.12
+      maturity_threshold: 0.7
+    - name: "quantum_computing"
+      innovation_rate_base: 0.2
+      adoption_rate_base: 0.05
+      maturity_threshold: 0.4
+  
+  # 研发参数
+  r_and_d:
+    rd_investment_percentage_base: 0.025
+    rd_efficiency: 0.7
+    breakthrough_probability: 0.05
+    
+  # 采用参数
+  adoption:
+    network_effect_strength: 0.3
+    cost_reduction_rate: 0.15
+    regulatory_barrier_base: 0.2
+    
+  # 技术周期参数
+  cycles:
+    hype_cycle_peak_time: 2  # 年
+    trough_adoption_rate: 0.15
+    plateau_growth_rate: 0.03
+    
+  # 风险参数
+  risks:
+    technological_unemployment_rate: 0.02
+    security_breach_probability: 0.1
+    ethical_concern_threshold: 0.6
+    
+  # 经济影响参数
+  economic_impact:
+    productivity_enhancement: 0.03
+    market_disruption_probability: 0.15
+    
+  # 气候影响参数
+  climate_impact:
+    carbon_reduction_potential: 0.4
+    resource_efficiency_gain: 0.3
+
+# 气候模型参数
+climate_model:
+  # 温室气体参数
+  greenhouse_gases:
+    co2_base_emissions_gigatons: 36.3
+    co2_growth_rate: 0.01
+    methane_base_emissions_gigatons: 3.5
+    methane_growth_rate: 0.005
+    
+  # 温度参数
+  temperature:
+    global_warming_base_celsius: 1.2
+    temperature_sensitivity: 0.8
+    annual_variability: 0.1
+    
+  # 极端气候事件参数
+  extreme_events:
+    hurricane_frequency_base: 15  # 每年
+    drought_frequency_base: 5  # 每年
+    flood_frequency_base: 8  # 每年
+    wildfire_frequency_base: 12  # 每年
+    extreme_event_intensity_growth: 0.02
+    
+  # 海平面上升参数
+  sea_level:
+    sea_level_rise_rate_mm_per_year: 3.6
+    acceleration_factor: 0.01
+    
+  # 生态系统参数
+  ecosystems:
+    biodiversity_loss_rate: 0.02
+    forest_cover_loss_rate: 0.005
+    ocean_acidification_rate: 0.002
+    
+  # 碳循环参数
+  carbon_cycle:
+    carbon_sink_capacity: 10.5  # 十亿吨/年
+    sink_efficiency_decline: 0.01
+    
+  # 经济影响参数
+  economic_impact:
+    adaptation_cost_percentage: 0.015
+    mitigation_cost_percentage: 0.02
+    disaster_economic_damage: 0.005
+    
+  # 政治影响参数
+  political_impact:
+    climate_refugee_flow_rate: 0.001
+    international_cooperation_effect: 0.3
+    
+  # 技术影响参数
+  tech_impact:
+    carbon_capture_efficiency: 0.2
+    renewable_energy_penetration_rate: 0.03
+
+# 领域交互参数
+interaction_model:
+  # 影响矩阵（行影响列）
+  impact_matrix:
+    # 行: source domain, 列: target domain
+    # 值范围: -1.0 (强负影响) 到 1.0 (强正影响)
+    economic_to_political: 0.6
+    economic_to_technological: 0.7
+    economic_to_climate: -0.5
+    political_to_economic: 0.7
+    political_to_technological: 0.4
+    political_to_climate: 0.5
+    technological_to_economic: 0.8
+    technological_to_political: 0.5
+    technological_to_climate: 0.6
+    climate_to_economic: -0.6
+    climate_to_political: -0.5
+    climate_to_technological: 0.3
+  
+  # 反馈强度参数
+  feedback:
+    positive_feedback_strength: 0.4
+    negative_feedback_strength: 0.3
+    feedback_delay_mean: 1.5  # 年
+    
+  # 非线性参数
+  nonlinearity:
+    threshold_effect: true
+    saturation_point: 0.8
+    exponential_growth_factor: 0.2
+    
+  # 级联效应参数
+  cascade:
+    cascade_probability: 0.15
+    max_cascade_depth: 3
+    cascade_damping_factor: 0.6
+    
+  # 时间延迟参数
+  time_delay:
+    short_delay_years: 0.5
+    medium_delay_years: 2
+    long_delay_years: 5
+    delay_variation: 0.2
+
+# 洞察提取器参数
+insight_extractor:
+  # 模式识别参数
+  pattern_recognition:
+    trend_min_duration_years: 5
+    cycle_min_duration_years: 7
+    cycle_max_duration_years: 15
+    anomaly_detection_threshold: 2.0  # 标准差
+    
+  # 转折点检测参数
+  tipping_points:
+    slope_change_threshold: 0.3
+    acceleration_threshold: 0.2
+    prediction_horizon_years: 10
+    
+  # 风险评估参数
+  risk_assessment:
+    risk_factor_weights:
+      economic: 0.35
+      political: 0.3
+      technological: 0.2
+      climate: 0.35
+    risk_combination_method: "weighted_sum"
+    critical_risk_threshold: 0.7
+    
+  # 机会识别参数
+  opportunities:
+    opportunity_detection_threshold: 0.6
+    potential_gain_minimum: 0.1
+    opportunity_duration_years: 3
+    
+  # 置信度计算参数
+  confidence:
+    simulation_count_for_confidence: 100
+    uncertainty_factor: 0.15
+    confidence_decay_rate: 0.05
+    
+  # 聚合参数
+  aggregation:
+    top_n_patterns: 10
+    key_metrics_count: 15
+    trend_significance_level: 0.05
+    correlation_threshold: 0.7
+
+# 世界模拟器参数
+world_simulator:
+  # 初始化参数
+  initialization:
+    reality_mapping_accuracy: 0.85
+    random_variation_initial: 0.05
+    historical_data_weight: 0.7
+    
+  # 演化参数
+  evolution:
+    mutation_rate: 0.02
+    crossover_rate: 0.3
+    selection_pressure: 0.8
+    
+  # 收敛参数
+  convergence:
+    convergence_threshold: 0.01
+    max_generations: 500
+    early_stopping_patience: 20
+    
+  # 资源分配参数
+  resources:
+    memory_per_worldline_mb: 50
+    processing_priority: "balanced"  # balanced, speed, accuracy
+    
+  # 性能优化参数
+  optimization:
+    parallel_execution: true
+    batch_size: 100
+    checkpoint_interval: 50  # 代
+    
+  # 验证参数
+  validation:
+    reality_check_frequency: 10  # 年
+    consistency_check_threshold: 0.05
+    outlier_detection: true
+
+# 种子生成器参数
+seed_generator:
+  # 熵源参数
+  entropy_sources:
+    use_system_time: true
+    use_hardware_random: true
+    use_weather_data: false
+    use_market_data: false
+  
+  # 种子稳定性参数
+  stability:
+    seed_reproducibility_check: true
+    variation_range: 0.01
+    seed_aging_factor: 0.001
+    
+  # 种子组合参数
+  combination:
+    combination_method: "weighted_average"
+    hash_function: "sha256"
+    salt_enabled: true
+
+# 幸存者选择器参数
+survivor_selector:
+  # 选择标准参数
+  selection_criteria:
+    reality_alignment_weight: 0.4
+    stability_weight: 0.2
+    diversity_weight: 0.2
+    resilience_weight: 0.2
+    
+  # 多样性参数
+  diversity:
+    diversity_metric: "euclidean_distance"
+    min_diversity_threshold: 0.3
+    max_similarity: 0.7
+    
+  # 稳定性参数
+  stability:
+    volatility_threshold: 0.3
+    trend_consistency: 0.7
+    
+  # 适应性参数
+  adaptability:
+    shock_response_threshold: 0.6
+    recovery_speed_weight: 0.3
+    
+  # 阈值参数
+  thresholds:
+    minimum_survival_score: 0.3
+    top_percentage_survivors: 0.1
+    
+  # 选择算法参数
+  algorithm:
+    selection_method: "tournament"
+    tournament_size: 5
+    elitism_factor: 0.05
+
+# 策略注入器参数
+strategy_injector:
+  # 策略类型参数
+  strategy_types:
+    - name: "economic"
+      implementation_probability: 0.7
+      effectiveness_range: [0.4, 0.8]
+    - name: "political"
+      implementation_probability: 0.6
+      effectiveness_range: [0.5, 0.85]
+    - name: "technological"
+      implementation_probability: 0.75
+      effectiveness_range: [0.5, 0.9]
+    - name: "climate"
+      implementation_probability: 0.65
+      effectiveness_range: [0.45, 0.8]
+  
+  # 干预参数
+  intervention:
+    intervention_frequency: 5  # 年
+    max_simultaneous_interventions: 3
+    intervention_strength: 0.3
+    
+  # 策略效果参数
+  effectiveness:
+    short_term_effect_weight: 0.3
+    medium_term_effect_weight: 0.4
+    long_term_effect_weight: 0.3
+    
+  # 副作用参数
+  side_effects:
+    unintended_consequence_probability: 0.2
+    side_effect_strength: 0.1
+    
+  # 策略演变参数
+  evolution:
+    strategy_adaptation_rate: 0.1
+    learning_rate: 0.2
+    strategy_improvement: true
+
+# 现实比较器参数
+reality_comparator:
+  # 比较指标参数
+  comparison_metrics:
+    economic_accuracy_weight: 0.3
+    political_accuracy_weight: 0.25
+    technological_accuracy_weight: 0.25
+    climate_accuracy_weight: 0.2
+    
+  # 相似度计算参数
+  similarity:
+    similarity_metric: "weighted_euclidean"
+    time_series_similarity: "dynamic_time_warping"
+    weight_decay_rate: 0.05
+    
+  # 预测准确性参数
+  prediction_accuracy:
+    forecast_horizon_max_years: 30
+    confidence_interval_width: 0.1
+    accuracy_scaling_factor: 0.8
+    
+  # 偏差检测参数
+  bias_detection:
+    systematic_bias_threshold: 0.05
+    outlier_bias_threshold: 0.15
+    bias_correction: true
+    
+  # 验证参数
+  validation:
+    historical_validation: true
+    cross_validation_folds: 5
+    backtesting_period_years: 10
+    
+  # 报告参数
+  reporting:
+    error_analysis: true
+    sensitivity_analysis: true
+    uncertainty_quantification: true

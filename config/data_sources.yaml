@@ -1,0 +1,310 @@
+# Nexus 项目数据源配置文件
+# 各数据源的连接信息和配置
+
+# 数据源通用配置
+general:
+  timeout_seconds: 30  # API请求超时时间
+  retry_count: 3  # 失败重试次数
+  retry_delay_seconds: 1  # 重试延迟
+  user_agent: "Nexus-Simulation-Engine/1.0"
+  verify_ssl: true
+  proxy: null  # 代理配置
+
+# 世界银行数据配置
+world_bank:
+  enabled: true
+  base_url: "https://api.worldbank.org/v2"
+  indicators:
+    - code: "NY.GDP.MKTP.CD"  # GDP (current US$)
+      name: "gdp_current_usd"
+      frequency: "annual"
+      priority: 1
+    - code: "NY.GDP.PCAP.CD"  # GDP per capita (current US$)
+      name: "gdp_per_capita_usd"
+      frequency: "annual"
+      priority: 1
+    - code: "FP.CPI.TOTL.ZG"  # Inflation, consumer prices (annual %)
+      name: "inflation_rate"
+      frequency: "annual"
+      priority: 1
+    - code: "SL.UEM.TOTL.ZS"  # Unemployment, total (% of labor force)
+      name: "unemployment_rate"
+      frequency: "annual"
+      priority: 1
+    - code: "NE.EXP.GNFS.ZS"  # Exports of goods and services (% of GDP)
+      name: "exports_percent_gdp"
+      frequency: "annual"
+      priority: 2
+    - code: "NE.IMP.GNFS.ZS"  # Imports of goods and services (% of GDP)
+      name: "imports_percent_gdp"
+      frequency: "annual"
+      priority: 2
+    - code: "NY.GDS.TOTL.ZS"  # Gross domestic savings (% of GDP)
+      name: "savings_rate"
+      frequency: "annual"
+      priority: 2
+    - code: "GC.DOD.TOTL.GD.ZS"  # Central government debt, total (% of GDP)
+      name: "government_debt_percent_gdp"
+      frequency: "annual"
+      priority: 2
+    - code: "BX.KLT.DINV.WD.GD.ZS"  # Foreign direct investment, net inflows (% of GDP)
+      name: "fdi_percent_gdp"
+      frequency: "annual"
+      priority: 2
+    - code: "SP.POP.GROW"  # Population growth (annual %)
+      name: "population_growth_rate"
+      frequency: "annual"
+      priority: 3
+    - code: "SP.POP.TOTL"  # Population, total
+      name: "population_total"
+      frequency: "annual"
+      priority: 3
+    - code: "EG.ELC.ACCS.ZS"  # Access to electricity (% of population)
+      name: "access_to_electricity"
+      frequency: "annual"
+      priority: 3
+    - code: "SH.DYN.MORT"  # Mortality rate, under-5 (per 1,000 live births)
+      name: "child_mortality_rate"
+      frequency: "annual"
+      priority: 3
+    - code: "SE.XPD.TOTL.GD.ZS"  # Government expenditure on education, total (% of GDP)
+      name: "education_expenditure_percent_gdp"
+      frequency: "annual"
+      priority: 3
+  
+  # 国家/地区代码列表
+  countries:
+    - "USA"
+    - "CHN"
+    - "IND"
+    - "JPN"
+    - "DEU"
+    - "GBR"
+    - "FRA"
+    - "ITA"
+    - "BRA"
+    - "CAN"
+    - "RUS"
+    - "KOR"
+    - "AUS"
+    - "MEX"
+    - "IDN"
+    - "TUR"
+    - "SAU"
+    - "ESP"
+    - "NLD"
+    - "POL"
+    
+  # 数据更新配置
+  update:
+    enabled: true
+    frequency_days: 7
+    last_updated: "2024-01-01"
+    max_history_years: 50
+    
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl_seconds: 86400  # 24 hours
+    use_compression: true
+
+# IMF数据配置
+imf:
+  enabled: true
+  base_url: "http://dataservices.imf.org/REST/SDMX_JSON"
+  databases:
+    - name: "IFS"  # International Financial Statistics
+      datasets:
+        - code: "NGDPD"  # Gross Domestic Product, current prices (billions)
+          name: "gdp_billions_current"
+          priority: 1
+        - code: "NGDPDPC"  # GDP per capita, current prices
+          name: "gdp_per_capita_current"
+          priority: 1
+        - code: "PCPIPCH"  # Inflation, average consumer prices (annual %)
+          name: "imf_inflation_rate"
+          priority: 1
+        - code: "LR.GNINT.R3"  # Lending Rate (%)
+          name: "lending_rate"
+          priority: 2
+        - code: "TM.RXF.CD"  # Exports of goods, value (current US$)
+          name: "exports_usd"
+          priority: 2
+        - code: "TM.RXM.CD"  # Imports of goods, value (current US$)
+          name: "imports_usd"
+          priority: 2
+    
+    - name: "WEO"  # World Economic Outlook
+      datasets:
+        - code: "NGDP"  # Gross domestic product, constant prices
+          name: "gdp_constant"
+          priority: 1
+        - code: "GGXWDG"  # General government gross debt
+          name: "government_gross_debt"
+          priority: 1
+        - code: "LP"  # Employed persons
+          name: "employed_persons"
+          priority: 2
+        - code: "LE"
+          name: "unemployment_rate"
+          priority: 1
+  
+  # 国家/地区列表
+  countries:
+    - "US"
+    - "CN"
+    - "IN"
+    - "JP"
+    - "DE"
+    - "GB"
+    - "FR"
+    - "IT"
+    - "BR"
+    - "CA"
+  
+  # 数据更新配置
+  update:
+    enabled: true
+    frequency_days: 30
+    last_updated: "2024-01-01"
+    
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl_seconds: 604800  # 7 days
+
+# NASA气候数据配置
+nasa_climate:
+  enabled: true
+  base_url: "https://data.giss.nasa.gov/gistemp"
+  datasets:
+    - name: "global_temp"
+      url: "/tables/v4.global.120001-202312.12Z.txt"
+      description: "Global-mean monthly, seasonal, and annual means, 1880-present"
+      format: "tsv"
+      priority: 1
+    - name: "land_ocean_temp"
+      url: "/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt"
+      description: "Global-mean estimates based on land and ocean data"
+      format: "text"
+      priority: 1
+  
+  # 其他NASA数据源
+  additional_sources:
+    - name: "giss_surface_temp"
+      api_url: "https://api.giss.nasa.gov/temp/"
+      endpoint: "surface"
+      priority: 2
+    - name: "nasa_power"
+      api_url: "https://power.larc.nasa.gov/api/temporal"
+      parameters: ["T2M", "PRECTOT", "WS2M"]
+      priority: 3
+  
+  # 数据更新配置
+  update:
+    enabled: true
+    frequency_days: 30
+    last_updated: "2024-01-01"
+    
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl_seconds: 2592000  # 30 days
+
+# 气候模型数据配置
+climate_models:
+  enabled: true
+  sources:
+    - name: "cmip6"
+      full_name: "Coupled Model Intercomparison Project Phase 6"
+      url: "https://esgf-node.llnl.gov/search/cmip6/"
+      priority: 1
+      scenarios:
+        - "ssp126"  # Shared Socioeconomic Pathway 1-2.6
+        - "ssp245"  # Shared Socioeconomic Pathway 2-4.5
+        - "ssp585"  # Shared Socioeconomic Pathway 5-8.5
+      variables:
+        - "tas"  # Near-Surface Air Temperature
+        - "pr"  # Precipitation
+        - "co2"  # Carbon Dioxide Concentration
+        - "tos"  # Sea Surface Temperature
+    
+    - name: "ipcc"
+      full_name: "Intergovernmental Panel on Climate Change"
+      url: "https://www.ipcc.ch/data/"
+      priority: 1
+      reports:
+        - "ar6"  # Sixth Assessment Report
+    
+    - name: "wmo"
+      full_name: "World Meteorological Organization"
+      url: "https://public.wmo.int/en/data"
+      priority: 2
+  
+  # 数据更新配置
+  update:
+    enabled: true
+    frequency_days: 90
+    last_updated: "2024-01-01"
+    
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl_seconds: 7776000  # 90 days
+    use_compression: true
+
+# 技术发展数据配置
+technology_data:
+  enabled: true
+  sources:
+    - name: "world_intellectual_property_org"
+      url: "https://www.wipo.int/ipstats/en/statistics/patents/"
+      priority: 2
+      datasets:
+        - "patent_applications"
+        - "patent_grants"
+    
+    - name: "oecd_technology"
+      url: "https://stats.oecd.org/"
+      indicators:
+        - code: "RD_EXPENDITURE"
+          name: "rd_expenditure"
+          priority: 2
+        - code: "ICT_INVESTMENT"
+          name: "ict_investment"
+          priority: 2
+    
+    - name: "itu_telecom"
+      url: "https://www.itu.int/en/ITU-D/Statistics/Pages/stat/default.aspx"
+      priority: 3
+    
+    - name: "cbinsights"
+      url: "https://www.cbinsights.com/research-reports/"
+      priority: 3
+  
+  # 技术类别
+  categories:
+    - "artificial_intelligence"
+    - "renewable_energy"
+    - "biotechnology"
+    - "quantum_computing"
+    - "blockchain"
+    - "advanced_manufacturing"
+  
+  # 数据更新配置
+  update:
+    enabled: true
+    frequency_days: 14
+    last_updated: "2024-01-01"
+    
+  # 缓存配置
+  cache:
+    enabled: true
+    ttl_seconds: 1209600  # 14 days
+
+# 政治数据配置
+political_data:
+  enabled: true
+  sources:
+    - name: "freedom_house"
+      url: "https://freedom

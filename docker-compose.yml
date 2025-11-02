@@ -1,0 +1,201 @@
+# Nexus 项目 Docker Compose 配置文件
+# 用于多服务编排，支持开发和生产环境
+
+version: '3.8'
+
+services:
+  # Nexus 主服务
+  nexus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexus-core
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data:rw
+      - ./cache:/app/cache:rw
+      - ./logs:/app/logs:rw
+      - ./output:/app/output:rw
+      - ./config:/app/config:ro
+    ports:
+      - "8000:8000"  # API服务端口
+    environment:
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - DEBUG=${DEBUG:-True}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DATABASE_URL=postgresql://${DB_USER:-nexus}:${DB_PASSWORD:-nexus}@postgres:5432/${DB_NAME:-nexus}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - nexus-network
+
+  # PostgreSQL 数据库服务
+  postgres:
+    image: postgres:14-alpine
+    container_name: nexus-postgres
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER:-nexus}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-nexus}
+      - POSTGRES_DB=${DB_NAME:-nexus}
+      - POSTGRES_INITDB_ARGS=--data-checksums
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-nexus}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-network
+
+  # Redis 缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: nexus-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-nexus}
+    command:
+      - "redis-server"
+      - "--requirepass ${REDIS_PASSWORD:-nexus}"
+      - "--appendonly yes"
+      - "--maxmemory 1gb"
+      - "--maxmemory-policy allkeys-lru"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nexus-network
+
+  # Prometheus 监控服务（可选）
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: nexus-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=15d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+    depends_on:
+      - nexus
+    networks:
+      - nexus-network
+
+  # Grafana 可视化服务（可选）
+  grafana:
+    image: grafana/grafana:9.0.0
+    container_name: nexus-grafana
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+    depends_on:
+      - prometheus
+    networks:
+      - nexus-network
+
+  # 可选：Jupyter Lab 开发环境
+  jupyter:
+    image: jupyter/datascience-notebook:python-3.10
+    container_name: nexus-jupyter
+    restart: unless-stopped
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./data:/home/jovyan/data:ro
+      - ./output:/home/jovyan/output:rw
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=${JUPYTER_TOKEN:-nexus}
+    networks:
+      - nexus-network
+
+# 卷定义
+volumes:
+  postgres-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './volumes/postgres'
+  redis-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './volumes/redis'
+  prometheus-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './volumes/prometheus'
+  grafana-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './volumes/grafana'
+
+# 网络定义
+networks:
+  nexus-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+
+# 开发环境配置（使用 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up）
+# 开发环境添加卷挂载源代码，启用调试
+
+# 生产环境配置（使用 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up）
+# 生产环境移除开发工具，使用非root用户，增加安全设置
+
+# 扩展建议：
+# 1. 添加 Nginx 反向代理处理 HTTPS
+# 2. 添加 ELK 栈用于日志管理
+# 3. 添加 Kafka 用于数据流处理
+# 4. 添加 Ray 或 Dask 集群用于分布式计算
+# 5. 添加备份服务
+
+# 使用说明：
+# - 开发环境：docker-compose up
+# - 生产环境：docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# - 查看日志：docker-compose logs -f
+# - 停止服务：docker-compose down
+# - 重建服务：docker-compose up --build
+# - 清理数据：docker-compose down -v
