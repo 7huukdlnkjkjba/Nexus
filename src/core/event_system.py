@@ -17,7 +17,8 @@ from functools import lru_cache
 
 from ..utils.logger import get_logger
 from ..utils.random_utils import get_seeded_random
-from ..data.data_types import Event, EventType, EventSeverity, Region
+from ..utils.data_types import WorldEvent as Event, EventType
+# 由于EventSeverity和Region类未找到，我们暂时注释掉
 
 
 class EventSystem:
@@ -26,13 +27,21 @@ class EventSystem:
     生成和管理影响各个领域的重大事件
     """
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Optional[Dict[str, Any]] = None, seed: Optional[int] = None):
         """
         初始化事件系统（优化版）
         
         Args:
             config: 配置字典
+            seed: 随机种子
         """
+        # 如果没有提供配置，初始化为空字典
+        if config is None:
+            config = {}
+        # 如果提供了seed参数，将其添加到配置中
+        if seed is not None:
+            config['seed'] = seed
+            
         self.logger = get_logger("EventSystem")
         self.config = config
         
@@ -148,26 +157,32 @@ class EventSystem:
         key_str = str(key_info)
         return hashlib.md5(key_str.encode()).hexdigest()
     
-    def generate_events(self, current_time: datetime, 
+    def generate_events(self, current_time, 
                       economic_state: Optional[Dict[str, Any]] = None,
                       political_state: Optional[Dict[str, Any]] = None,
                       technological_state: Optional[Dict[str, Any]] = None,
                       climate_state: Optional[Dict[str, Any]] = None,
-                      seed: Optional[int] = None) -> List[Event]:
+                      seed: Optional[int] = None,
+                      timeline_count: Optional[int] = None) -> List[Event]:
         """
         生成新事件（优化版，使用缓存机制）
         
         Args:
-            current_time: 当前时间
+            current_time: 当前时间（可以是datetime或整数年份）
             economic_state: 经济状态
             political_state: 政治状态
             technological_state: 技术状态
             climate_state: 气候状态
             seed: 随机种子
+            timeline_count: 时间线数量（可选）
             
         Returns:
             生成的事件列表
         """
+        # 处理current_time为整数的情况
+        if isinstance(current_time, int):
+            from datetime import datetime
+            current_time = datetime(current_time, 1, 1)  # 转换为该年份的1月1日
         # 生成上下文哈希，用于缓存查找
         context_hash = self._generate_context_hash(current_time, economic_state, 
                                                  political_state, technological_state, 

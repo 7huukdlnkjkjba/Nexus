@@ -10,7 +10,7 @@ Nexus - 全球博弈模拟与策略超前推演引擎
 import logging
 import uuid
 import copy
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
 import random
 
@@ -24,13 +24,22 @@ from .world_simulator import WorldSimulator
 class TimelineManager:
     """时间线管理器"""
     
-    def __init__(self, config: Dict[str, Any]):
+    def __init__(self, config: Optional[Dict[str, Any]] = None, seed: Optional[int] = None):
         """
         初始化时间线管理器
         
         Args:
             config: 配置字典
+            seed: 随机种子
         """
+        # 如果没有提供配置，初始化为空字典
+        if config is None:
+            config = {}
+        
+        # 如果提供了种子，将其添加到配置中
+        if seed is not None:
+            config['seed'] = seed
+            
         self.logger = get_logger("TimelineManager")
         self.config = config
         
@@ -52,6 +61,24 @@ class TimelineManager:
         self.evaluator = WorldLineEvaluator(config)
         
         self.logger.info("时间线管理器初始化完成")
+    
+    def add_worldline(self, worldline: WorldLine) -> None:
+        """
+        添加世界线到时间线管理器
+        
+        Args:
+            worldline: 要添加的世界线
+        """
+        self.worldlines[worldline.id] = worldline
+    
+    def get_worldlines(self) -> List[WorldLine]:
+        """
+        获取所有世界线
+        
+        Returns:
+            世界线列表
+        """
+        return list(self.worldlines.values())
     
     def create_initial_worldline(self, initial_state: Dict[str, Any], 
                                seed: Optional[int] = None) -> WorldLine:

@@ -9,7 +9,7 @@ Nexus - 全球博弈模拟与策略超前推演引擎
 
 import logging
 import random
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from datetime import datetime
 import math
 
@@ -101,6 +101,70 @@ class TechnologyModel:
         }
         
         self.logger.info("技术模型初始化完成")
+    
+    def initialize_state(self, initial_year: int) -> Dict[str, Any]:
+        """
+        初始化技术状态
+        
+        Args:
+            initial_year: 初始年份
+            
+        Returns:
+            初始化后的技术状态字典
+        """
+        # 创建基础技术状态
+        technology_state = {
+            "year": initial_year,
+            "maturity": {},
+            "research_funding": {},
+            "capabilities": {},
+            "breakthroughs": [],
+            "adoption_rates": {}
+        }
+        
+        # 初始化各技术领域的成熟度
+        for tech in self.technology_fields:
+            # 根据技术领域设置初始成熟度
+            if tech in ["artificial_intelligence", "renewable_energy", "robotics"]:
+                technology_state["maturity"][tech] = 0.6  # 较高成熟度
+            elif tech in ["quantum_computing", "fusion_energy", "gene_editing"]:
+                technology_state["maturity"][tech] = 0.3  # 中等成熟度
+            elif tech in ["nanotechnology", "advanced_materials", "blockchain"]:
+                technology_state["maturity"][tech] = 0.4  # 中等成熟度
+            else:
+                technology_state["maturity"][tech] = 0.2  # 较低成熟度
+            
+            # 初始化采用率
+            technology_state["adoption_rates"][tech] = technology_state["maturity"][tech] * 0.7
+        
+        # 初始化主要国家的研发投入和技术能力
+        countries = set()
+        for country_techs in self.tech_leaders.values():
+            for tech in country_techs:
+                countries.add(tech)
+        
+        # 确保包含所有主要技术领先国家
+        for country in self.tech_leaders.keys():
+            # 初始化研发投入（单位：十亿美元）
+            if country == "US":
+                technology_state["research_funding"][country] = 600.0
+            elif country == "China":
+                technology_state["research_funding"][country] = 450.0
+            elif country == "EU":
+                technology_state["research_funding"][country] = 350.0
+            else:
+                technology_state["research_funding"][country] = 100.0
+            
+            # 初始化技术能力
+            technology_state["capabilities"][country] = {}
+            for tech in self.technology_fields:
+                # 根据国家在该技术领域的领先程度设置能力值
+                if country in self.tech_leaders and tech in self.tech_leaders[country]:
+                    technology_state["capabilities"][country][tech] = 0.8
+                else:
+                    technology_state["capabilities"][country][tech] = 0.4
+        
+        return technology_state
     
     def evolve(self, technology_state: Dict[str, Any], current_time: datetime, 
               economic_state: Optional[Dict[str, Any]] = None,

@@ -26,3 +26,55 @@ Traceback (most recent call last):
   File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 585, in _init_fn
     raise TypeError(f'non-default argument {f.name!r} '
 TypeError: non-default argument 'insight_type' follows default argument
+2025-11-02 13:02:20,588 - nexus.test - ERROR - 组件测试失败: non-default argument 'insight_type' follows default argument
+Traceback (most recent call last):
+  File "D:\下载\Nexus\test_simulation.py", line 149, in test_individual_components
+    from src.data.data_types import WorldLine
+  File "D:\下载\Nexus\src\data\data_types.py", line 20, in <module>
+    from utils.data_types import DomainType, SimulationMode
+  File "D:\下载\Nexus\src\utils\data_types.py", line 377, in <module>
+    @dataclass
+     ^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1275, in dataclass
+    return wrap(cls)
+           ^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1265, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1063, in _process_class
+    _init_fn(all_init_fields,
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 585, in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+TypeError: non-default argument 'insight_type' follows default argument
+2025-11-02 13:04:48,615 - nexus.test - ERROR - 组件测试失败: non-default argument 'simulation_config' follows default argument
+Traceback (most recent call last):
+  File "D:\下载\Nexus\test_simulation.py", line 149, in test_individual_components
+    from src.data.data_types import WorldLine
+  File "D:\下载\Nexus\src\data\data_types.py", line 20, in <module>
+    from utils.data_types import DomainType, SimulationMode
+  File "D:\下载\Nexus\src\utils\data_types.py", line 429, in <module>
+    @dataclass
+     ^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1275, in dataclass
+    return wrap(cls)
+           ^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1265, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 1063, in _process_class
+    _init_fn(all_init_fields,
+  File "C:\Users\Administrator\AppData\Local\Programs\Python\Python312\Lib\dataclasses.py", line 585, in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+TypeError: non-default argument 'simulation_config' follows default argument
+2025-11-02 13:05:29,261 - nexus.test - ERROR - 组件测试失败: WorldLine.__init__() got an unexpected keyword argument 'survival_probability'
+Traceback (most recent call last):
+  File "D:\下载\Nexus\test_simulation.py", line 151, in test_individual_components
+    world_line = WorldLine(
+                 ^^^^^^^^^^
+TypeError: WorldLine.__init__() got an unexpected keyword argument 'survival_probability'
+2025-11-02 13:07:06,211 - nexus.test - ERROR - 组件测试失败: WorldLine.__init__() got an unexpected keyword argument 'value_score'
+Traceback (most recent call last):
+  File "D:\下载\Nexus\test_simulation.py", line 151, in test_individual_components
+    world_line = WorldLine(
+                 ^^^^^^^^^^
+TypeError: WorldLine.__init__() got an unexpected keyword argument 'value_score'

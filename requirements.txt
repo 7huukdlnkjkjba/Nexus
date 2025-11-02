@@ -10,28 +10,5 @@ scipy>=1.7.0
 matplotlib>=3.4.0
 seaborn>=0.11.0
 
-# 并行处理支持
-concurrent.futures  # Python 标准库
-multiprocessing  # Python 标准库
-
-# 日志记录
-logging  # Python 标准库
-
-# JSON 处理
-json  # Python 标准库
-
-# 文件操作
-os  # Python 标准库
-pathlib  # Python 标准库
-
-# 参数解析
-argparse  # Python 标准库
-
-# 时间处理
-datetime  # Python 标准库
-
-# 数据压缩（结果存储）
-gzip>=1.10.0
-
 # 类型提示支持（Python 3.8+）
 typing_extensions>=4.0.0

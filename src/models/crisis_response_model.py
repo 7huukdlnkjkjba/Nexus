@@ -15,7 +15,7 @@ import math
 
 from ..utils.logger import get_logger
 from ..utils.random_utils import get_seeded_random
-from ..data.data_types import Event, EventType, EventSeverity, Country, ResponseType, ResponseEffectiveness
+from ..utils.data_types import WorldEvent as Event, EventType
 
 
 class CrisisResponseModel:
@@ -133,14 +133,14 @@ class CrisisResponseModel:
         
         # 响应策略库
         self.response_strategies = {
-            EventType.ECONOMIC_CRISIS: self._generate_economic_crisis_responses,
-            EventType.TECHNOLOGICAL_BREAKTHROUGH: self._generate_technological_breakthrough_responses,
-            EventType.CONFLICT: self._generate_conflict_responses,
-            EventType.PANDEMIC: self._generate_pandemic_responses,
-            EventType.NATURAL_DISASTER: self._generate_natural_disaster_responses,
-            EventType.POLITICAL_CRISIS: self._generate_political_crisis_responses,
-            EventType.RESOURCE_CRISIS: self._generate_resource_crisis_responses,
-            EventType.SOCIAL_UNREST: self._generate_social_unrest_responses
+            "economic_crisis": self._generate_economic_crisis_responses,
+            "technological_breakthrough": self._generate_technological_breakthrough_responses,
+            "conflict": self._generate_conflict_responses,
+            "pandemic": self._generate_pandemic_responses,
+            "natural_disaster": self._generate_natural_disaster_responses,
+            "political_crisis": self._generate_political_crisis_responses,
+            "resource_crisis": self._generate_resource_crisis_responses,
+            "social_unrest": self._generate_social_unrest_responses
         }
         
         # 历史响应记录
@@ -668,7 +668,7 @@ class CrisisResponseModel:
         
         return probability
     
-    def _get_event_type_response_factor(self, event_type: EventType) -> float:
+    def _get_event_type_response_factor(self, event_type: str) -> float:
         """
         获取事件类型的响应因子
         
@@ -679,19 +679,20 @@ class CrisisResponseModel:
             响应因子
         """
         factors = {
-            EventType.ECONOMIC_CRISIS: 0.1,
-            EventType.TECHNOLOGICAL_BREAKTHROUGH: -0.1,  # 技术突破通常不需要紧急响应
-            EventType.CONFLICT: 0.2,
-            EventType.PANDEMIC: 0.25,
-            EventType.NATURAL_DISASTER: 0.2,
-            EventType.POLITICAL_CRISIS: 0.1,
-            EventType.RESOURCE_CRISIS: 0.15,
-            EventType.SOCIAL_UNREST: 0.05
+            "economic_crisis": 0.1,
+            "technological_breakthrough": -0.1,  # 技术突破通常不需要紧急响应
+            "conflict": 0.2,
+            "pandemic": 0.25,
+            "natural_disaster": 0.2,
+            "political_crisis": 0.1,
+            "resource_crisis": 0.15,
+            "social_unrest": 0.05
         }
         
         return factors.get(event_type, 0.1)
     
-    def _get_appropriate_response_types(self, event: Event) -> List[ResponseType]:
+    def _get_appropriate_response_types(self, event: Event) -> List[str]:
+        # 使用字符串代替ResponseType枚举
         """
         获取适合事件的响应类型列表
         
@@ -702,61 +703,61 @@ class CrisisResponseModel:
             响应类型列表
         """
         response_mapping = {
-            EventType.ECONOMIC_CRISIS: [
-                ResponseType.ECONOMIC_STIMULUS,
-                ResponseType.REGULATORY_ACTION,
-                ResponseType.COOPERATION,
-                ResponseType.DIPLOMATIC_EFFORT
+            "economic_crisis": [
+                "economic_stimulus",
+                "regulatory_action",
+                "cooperation",
+                "diplomatic_effort"
             ],
-            EventType.TECHNOLOGICAL_BREAKTHROUGH: [
-                ResponseType.INVESTMENT,
-                ResponseType.REGULATORY_ACTION,
-                ResponseType.KNOWLEDGE_SHARING,
-                ResponseType.COOPERATION
+            "technological_breakthrough": [
+                "investment",
+                "regulatory_action",
+                "knowledge_sharing",
+                "cooperation"
             ],
-            EventType.CONFLICT: [
-                ResponseType.DIPLOMATIC_EFFORT,
-                ResponseType.ECONOMIC_SANCTIONS,
-                ResponseType.MILITARY_INTERVENTION,
-                ResponseType.HUMANITARIAN_AID,
-                ResponseType.PEACEKEEPING
+            "conflict": [
+                "diplomatic_effort",
+                "economic_sanctions",
+                "military_intervention",
+                "humanitarian_aid",
+                "peacekeeping"
             ],
-            EventType.PANDEMIC: [
-                ResponseType.PUBLIC_HEALTH_MEASURES,
-                ResponseType.HUMANITARIAN_AID,
-                ResponseType.RESEARCH_FUNDING,
-                ResponseType.COOPERATION
+            "pandemic": [
+                "public_health_measures",
+                "humanitarian_aid",
+                "research_funding",
+                "cooperation"
             ],
-            EventType.NATURAL_DISASTER: [
-                ResponseType.HUMANITARIAN_AID,
-                ResponseType.RESCUE_OPERATION,
-                ResponseType.RECONSTRUCTION,
-                ResponseType.COOPERATION
+            "natural_disaster": [
+                "humanitarian_aid",
+                "rescue_operation",
+                "reconstruction",
+                "cooperation"
             ],
-            EventType.POLITICAL_CRISIS: [
-                ResponseType.DIPLOMATIC_EFFORT,
-                ResponseType.SANCTIONS,
-                ResponseType.HUMANITARIAN_AID,
-                ResponseType.MONITORING
+            "political_crisis": [
+                "diplomatic_effort",
+                "sanctions",
+                "humanitarian_aid",
+                "monitoring"
             ],
-            EventType.RESOURCE_CRISIS: [
-                ResponseType.RESOURCE_ALLOCATION,
-                ResponseType.ECONOMIC_MEASURES,
-                ResponseType.TECHNOLOGICAL_ADAPTATION,
-                ResponseType.COOPERATION
+            "resource_crisis": [
+                "resource_allocation",
+                "economic_measures",
+                "technological_adaptation",
+                "cooperation"
             ],
-            EventType.SOCIAL_UNREST: [
-                ResponseType.POLICING_ACTION,
-                ResponseType.SOCIAL_REFORMS,
-                ResponseType.DIPLOMATIC_EFFORT,
-                ResponseType.MONITORING
+            "social_unrest": [
+                "policing_action",
+                "social_reforms",
+                "diplomatic_effort",
+                "monitoring"
             ]
         }
         
-        return response_mapping.get(event.type, [ResponseType.MONITORING])
+        return response_mapping.get(event.type, ["monitoring"])
     
     def _get_appropriate_organization_response_types(self, event: Event,
-                                                   organization: str) -> List[ResponseType]:
+                                                   organization: str) -> List[str]:
         """
         获取适合特定组织和事件的响应类型列表
         
@@ -966,10 +967,10 @@ class CrisisResponseModel:
     
     def _calculate_response_effectiveness(self, country: str,
                                         event: Event,
-                                        response_type: ResponseType,
+                                        response_type: str,
                                         intensity: float,
                                         capabilities: Dict[str, float],
-                                        rng: random.Random) -> ResponseEffectiveness:
+                                        rng: random.Random) -> float:
         """
         计算响应有效性
         
@@ -1018,10 +1019,10 @@ class CrisisResponseModel:
     
     def _calculate_organization_response_effectiveness(self, organization: str,
                                                     event: Event,
-                                                    response_type: ResponseType,
+                                                    response_type: str,
                                                     intensity: float,
                                                     capabilities: Dict[str, float],
-                                                    rng: random.Random) -> ResponseEffectiveness:
+                                                    rng: random.Random) -> float:
         """
         计算国际组织响应有效性
         
@@ -1160,7 +1161,7 @@ class CrisisResponseModel:
     
     def _calculate_public_support(self, country: str,
                                 event: Event,
-                                response_type: ResponseType,
+                                response_type: str,
                                 intensity: float,
                                 rng: random.Random) -> float:
         """
@@ -1272,7 +1273,7 @@ class CrisisResponseModel:
     
     def _generate_response_description(self, country: str,
                                      event: Event,
-                                     response_type: ResponseType,
+                                     response_type: str,
                                      intensity: float) -> str:
         """
         生成响应描述
@@ -1344,7 +1345,7 @@ class CrisisResponseModel:
     
     def _generate_organization_response_description(self, organization: str,
                                                   event: Event,
-                                                  response_type: ResponseType) -> str:
+                                                  response_type: str) -> str:
         """
         生成国际组织响应描述
         
@@ -1358,28 +1359,28 @@ class CrisisResponseModel:
         """
         # 响应类型描述（组织版本）
         response_descriptions = {
-            ResponseType.ECONOMIC_STIMULUS: "经济援助计划",
-            ResponseType.ECONOMIC_SANCTIONS: "经济制裁决议",
-            ResponseType.MILITARY_INTERVENTION: "军事行动授权",
-            ResponseType.HUMANITARIAN_AID: "人道主义援助行动",
-            ResponseType.DIPLOMATIC_EFFORT: "外交调解",
-            ResponseType.PUBLIC_HEALTH_MEASURES: "公共卫生响应",
-            ResponseType.REGULATORY_ACTION: "监管框架",
-            ResponseType.INVESTMENT: "发展基金",
-            ResponseType.SOCIAL_REFORMS: "社会发展项目",
-            ResponseType.TECHNOLOGICAL_ADAPTATION: "技术援助",
-            ResponseType.RESOURCE_ALLOCATION: "资源协调",
-            ResponseType.KNOWLEDGE_SHARING: "知识共享平台",
-            ResponseType.RESCUE_OPERATION: "紧急救援协调",
-            ResponseType.RECONSTRUCTION: "重建项目",
-            ResponseType.PEACEKEEPING: "维和任务",
-            ResponseType.POLICING_ACTION: "安全支持",
-            ResponseType.SANCTIONS: "制裁决议",
-            ResponseType.COOPERATION: "国际合作框架",
-            ResponseType.MONITORING: "监测任务",
-            ResponseType.TRADE_AGREEMENTS: "贸易协议",
-            ResponseType.ECONOMIC_MEASURES: "经济政策协调",
-            ResponseType.RESEARCH_FUNDING: "研究资助计划"
+            "economic_stimulus": "经济援助计划",
+            "economic_sanctions": "经济制裁决议",
+            "military_intervention": "军事行动授权",
+            "humanitarian_aid": "人道主义援助行动",
+            "diplomatic_effort": "外交调解",
+            "public_health_measures": "公共卫生响应",
+            "regulatory_action": "监管框架",
+            "investment": "发展基金",
+            "social_reforms": "社会发展项目",
+            "technological_adaptation": "技术援助",
+            "resource_allocation": "资源协调",
+            "knowledge_sharing": "知识共享平台",
+            "rescue_operation": "紧急救援协调",
+            "reconstruction": "重建项目",
+            "peacekeeping": "维和任务",
+            "policing_action": "安全支持",
+            "sanctions": "制裁决议",
+            "cooperation": "国际合作框架",
+            "monitoring": "监测任务",
+            "trade_agreements": "贸易协议",
+            "economic_measures": "经济政策协调",
+            "research_funding": "研究资助计划"
         }
         
         response_desc = response_descriptions.get(response_type, "响应")
@@ -1418,7 +1419,7 @@ class CrisisResponseModel:
     
     def _assess_response_risks(self, country: str,
                              event: Event,
-                             response_type: ResponseType,
+                             response_type: str,
                              intensity: float) -> Dict[str, float]:
         """
         评估响应风险
@@ -1468,15 +1469,15 @@ class CrisisResponseModel:
         
         # 安全风险
         if response_type in [
-            ResponseType.MILITARY_INTERVENTION,
-            ResponseType.POLICING_ACTION,
-            ResponseType.RESCUE_OPERATION,
-            ResponseType.PEACEKEEPING
+            "military_intervention",
+            "policing_action",
+            "rescue_operation",
+            "peacekeeping"
         ]:
             risks["security_risk"] = intensity * 0.8
         
         # 冲突事件增加所有风险
-        if event.type == EventType.CONFLICT:
+        if event.type == "conflict":
             for key in risks:
                 risks[key] = min(risks[key] * 1.5, 1.0)
         
@@ -1488,7 +1489,7 @@ class CrisisResponseModel:
     
     def _calculate_response_importance(self, country: str,
                                      event: Event,
-                                     response_type: ResponseType,
+                                     response_type: str,
                                      intensity: float) -> float:
         """
         计算响应重要性
@@ -1529,7 +1530,7 @@ class CrisisResponseModel:
     
     def _calculate_organization_response_importance(self, organization: str,
                                                   event: Event,
-                                                  response_type: ResponseType) -> float:
+                                                  response_type: str) -> float:
         """
         计算国际组织响应重要性
         

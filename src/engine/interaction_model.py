@@ -9,9 +9,9 @@ from datetime import datetime
 import logging
 from scipy.optimize import fsolve
 
-from nexus.utils.logger import get_logger
-from nexus.utils.random_utils import RandomGenerator
-from nexus.utils.data_types import DomainType, SimulationMode
+from ..utils.logger import get_logger
+from ..utils.random_utils import RandomGenerator
+from ..utils.data_types import DomainType, SimulationMode
 
 
 @dataclass

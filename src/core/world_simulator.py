@@ -18,9 +18,9 @@ from ..utils.logger import get_logger
 from ..utils.random_utils import get_seeded_random
 from ..models.economic_model import EconomicModel
 from ..models.political_model import PoliticalModel
-from ..models.technological_model import TechnologicalModel
+from ..models.technology_model import TechnologyModel
 from ..models.climate_model import ClimateModel
-from ..models.interaction_model import InteractionModel
+from ..engine.interaction_model import InteractionModel
 from ..data.data_types import WorldLine
 
 class WorldSimulator:
@@ -47,7 +47,7 @@ class WorldSimulator:
         self.logger.info("初始化领域模型...")
         self.economic_model = EconomicModel(config)
         self.political_model = PoliticalModel(config)
-        self.technological_model = TechnologicalModel(config)
+        self.technological_model = TechnologyModel(config)
         self.climate_model = ClimateModel(config)
         self.interaction_model = InteractionModel(config)
         

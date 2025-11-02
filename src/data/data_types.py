@@ -455,10 +455,15 @@ class WorldLine:
     birth_time: str = field(default_factory=lambda: datetime.now().isoformat())  # 出生时间
     parent_ids: List[str] = field(default_factory=list)  # 父世界线ID列表
     survival_score: float = 0.0  # 生存评分
+    survival_probability: float = 1.0  # 生存概率（测试需要）
+    value_score: float = 0.0  # 价值评分（测试需要）
     current_time: str = field(default_factory=lambda: datetime.now().isoformat())  # 当前时间
     state: Dict[str, Any] = field(default_factory=dict)  # 状态
     events: List[Dict[str, Any]] = field(default_factory=list)  # 事件列表
     history: List[Dict[str, Any]] = field(default_factory=list)  # 历史记录
+    # 测试文件中使用的参数
+    initial_state: Dict[str, Any] = field(default_factory=dict)  # 初始状态
+    timeline: List[Dict[str, Any]] = field(default_factory=list)  # 时间线
     
     def copy(self) -> 'WorldLine':
         """

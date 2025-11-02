@@ -71,6 +71,56 @@ class EconomicModel:
         
         self.logger.info("经济模型初始化完成")
     
+    def initialize_state(self, initial_year: int) -> Dict[str, Any]:
+        """
+        初始化经济状态
+        
+        Args:
+            initial_year: 初始年份
+            
+        Returns:
+            初始化后的经济状态字典
+        """
+        # 创建基础经济状态
+        economic_state = {
+            "year": initial_year,
+            "gdp": {},
+            "inflation": {},
+            "unemployment": {},
+            "trade": {},
+            "debt": {}
+        }
+        
+        # 为主要经济体初始化基础值
+        for country in self.economic_powers:
+            # 初始化GDP（万亿美元为单位）
+            if country == "US":
+                economic_state["gdp"][country] = 26.0
+            elif country == "China":
+                economic_state["gdp"][country] = 18.0
+            elif country == "EU":
+                economic_state["gdp"][country] = 16.0
+            elif country == "Japan":
+                economic_state["gdp"][country] = 4.2
+            elif country == "UK":
+                economic_state["gdp"][country] = 3.0
+            elif country == "India":
+                economic_state["gdp"][country] = 3.5
+            else:
+                # 其他国家的基础GDP值
+                economic_state["gdp"][country] = 2.0
+            
+            # 初始化通胀率（目标通胀率）
+            economic_state["inflation"][country] = self.inflation_params["target_rate"]
+            
+            # 初始化失业率（自然失业率）
+            economic_state["unemployment"][country] = self.unemployment_params["natural_rate"]
+            
+            # 初始化债务（GDP的一定比例）
+            economic_state["debt"][country] = economic_state["gdp"][country] * 0.8
+        
+        return economic_state
+    
     def evolve(self, economic_state: Dict[str, Any], current_time: datetime, 
               rng: random.Random) -> Dict[str, Any]:
         """

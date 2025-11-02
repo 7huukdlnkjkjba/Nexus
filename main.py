@@ -38,9 +38,9 @@ from src.core.event_system import EventSystem
 
 # 导入数据类型
 from src.data.data_types import (
-    WorldLine, Event, EventType, EventSeverity, 
-    ResponseType, ResponseEffectiveness, RealityData, DataCatalog
+    WorldLine, RealityData, DataCatalog
 )
+from src.utils.data_types import WorldEvent as Event, EventType
 
 # 导入模型
 from src.models.evaluator import WorldLineEvaluator
@@ -265,7 +265,7 @@ def save_simulation_results(results: Dict[str, Any], output_dir: str) -> None:
             "political_state": timeline.political_state,
             "technology_state": timeline.technology_state,
             "climate_state": timeline.climate_state,
-            "timeline_history": timeline.timeline_history
+            "timeline_history": timeline.history
         }
         
         # 保存到 JSON 文件

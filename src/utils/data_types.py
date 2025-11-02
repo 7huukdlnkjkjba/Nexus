@@ -379,8 +379,8 @@ class Insight:
     """
     洞察类
     """
-    insight_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    insight_type: InsightType
+    insight_type: InsightType  # 必需参数放在最前面
+    insight_id: str = field(default_factory=lambda: str(uuid.uuid4()))  # 标识符
     title: str = ""
     description: str = ""
     domains: List[DomainType] = field(default_factory=list)
@@ -431,8 +431,8 @@ class SimulationResult:
     """
     模拟结果类
     """
-    result_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    simulation_config: SimulationConfig
+    simulation_config: SimulationConfig  # 必需参数放在前面
+    result_id: str = field(default_factory=lambda: str(uuid.uuid4()))  # 默认参数放在后面
     worldlines: List[WorldLine] = field(default_factory=list)
     surviving_worldlines: List[WorldLine] = field(default_factory=list)
     insights: List[Insight] = field(default_factory=list)

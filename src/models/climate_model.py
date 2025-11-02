@@ -9,7 +9,7 @@ Nexus - 全球博弈模拟与策略超前推演引擎
 
 import logging
 import random
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from datetime import datetime
 import math
 
@@ -100,17 +100,61 @@ class ClimateModel:
             "energy": 15.7,
             "industry": 6.2,
             "agriculture": 5.2,
-            "transportation": 8.0,
-            "buildings": 3.0,
-            "forestry": -1.2,  # 负排放
-            "waste": 1.5
+            "transportation": 7.3,
+            "buildings": 3.2,
+            "forestry": -1.1,
+            "waste": 1.6
         })
         
-        # 气候政策类型
-        self.policy_types = ["carbon_tax", "cap_and_trade", "renewable_subsidies",
-                           "efficiency_standards", "reforestation", "carbon_capture"]
-        
         self.logger.info("气候模型初始化完成")
+    
+    def initialize_state(self, initial_year: int) -> Dict[str, Any]:
+        """
+        初始化气候状态
+        
+        Args:
+            initial_year: 初始年份
+            
+        Returns:
+            初始化后的气候状态字典
+        """
+        # 创建基础气候状态
+        climate_state = {
+            "year": initial_year,
+            "temperature": {},
+            "emissions": {},
+            "carbon_concentration": {},
+            "sea_level": 8.9,  # 单位：英寸上升（相对于1900年）
+            "extreme_events": [],
+            "policy_impact": 0.1,
+            "carbon_budget": 1000  # 剩余碳预算（单位：GtCO2）
+        }
+        
+        # 初始化全球平均温度（相对于工业化前水平）
+        climate_state["temperature"]["global"] = 1.2  # 单位：℃
+        
+        # 初始化地区温度
+        for region in self.regions:
+            # 地区温度异常，根据地区不同设置不同值
+            if region == "Arctic":
+                climate_state["temperature"][region] = 3.5
+            elif region == "Antarctica":
+                climate_state["temperature"][region] = 0.5
+            elif region in ["North_America", "Europe", "Asia"]:
+                climate_state["temperature"][region] = 1.3
+            else:
+                climate_state["temperature"][region] = 1.1
+        
+        # 初始化各部门排放量
+        for sector, emission in self.initial_emissions.items():
+            climate_state["emissions"][sector] = emission
+        
+        # 初始化碳浓度
+        climate_state["carbon_concentration"]["co2"] = 415.0  # 单位：ppm
+        climate_state["carbon_concentration"]["methane"] = 1875.0  # 单位：ppb
+        climate_state["carbon_concentration"]["nitrous_oxide"] = 332.0  # 单位：ppb
+        
+        return climate_state
     
     def evolve(self, climate_state: Dict[str, Any], current_time: datetime, 
               economic_state: Optional[Dict[str, Any]] = None,

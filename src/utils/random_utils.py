@@ -49,11 +49,12 @@ class SeedGenerator:
         从任意对象生成种子
         
         Args:
-            obj: 任意可序列化对象
+            obj: 任意对象
             
         Returns:
             整数种子
         """
+        # 将对象转换为字符串并生成种子
         obj_str = str(obj)
         return SeedGenerator.from_string(obj_str)
     
@@ -94,6 +95,49 @@ class RandomGenerator:
         
         # 记录初始种子
         self.initial_seed = self.seed
+    
+    def reset(self) -> None:
+        """
+        重置随机数生成器到初始种子
+        """
+        self.seed = self.initial_seed
+        self._python_rng = random.Random(self.seed)
+        self._numpy_rng = np.random.RandomState(self.seed)
+
+
+def get_seeded_random(seed: Optional[int] = None) -> random.Random:
+    """
+    获取带种子的随机数生成器
+    
+    Args:
+        seed: 随机种子，如果为None则使用时间种子
+    
+    Returns:
+        带种子的随机数生成器
+    """
+    if seed is None:
+        seed = SeedGenerator.from_time()
+    rng = random.Random(seed)
+    return rng
+
+
+class RandomGenerator:
+    """
+    随机数生成器包装类
+    提供Python random和NumPy随机数生成功能
+    """
+    
+    def __init__(self, seed: Optional[int] = None):
+        """
+        初始化随机数生成器
+        
+        Args:
+            seed: 随机种子
+        """
+        self.initial_seed = seed if seed is not None else SeedGenerator.from_time()
+        self.seed = self.initial_seed
+        self._python_rng = random.Random(self.seed)
+        self._numpy_rng = np.random.RandomState(self.seed)
     
     def reset(self) -> None:
         """

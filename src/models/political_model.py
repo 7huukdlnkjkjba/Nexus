@@ -9,7 +9,7 @@ Nexus - 全球博弈模拟与策略超前推演引擎
 
 import logging
 import random
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, List, Tuple, Optional
 from datetime import datetime
 import math
 
@@ -90,6 +90,104 @@ class PoliticalModel:
         })
         
         self.logger.info("政治模型初始化完成")
+    
+    def initialize_state(self, initial_year: int) -> Dict[str, Any]:
+        """
+        初始化政治状态
+        
+        Args:
+            initial_year: 初始年份
+            
+        Returns:
+            初始化后的政治状态字典
+        """
+        # 创建基础政治状态
+        political_state = {
+            "year": initial_year,
+            "stability": {},
+            "relations": {},
+            "governments": {},
+            "alliances": self.alliances.copy(),
+            "ideologies": self.ideologies.copy()
+        }
+        
+        # 为主要政治力量初始化稳定性值
+        for country in self.political_powers:
+            # 初始化稳定性值（0-1之间）
+            if country in ["US", "UK", "Germany", "France", "Japan", "Canada"]:
+                political_state["stability"][country] = 0.85
+            elif country in ["China", "Russia", "Saudi_Arabia"]:
+                political_state["stability"][country] = 0.80
+            elif country in ["India", "Brazil", "South_Korea"]:
+                political_state["stability"][country] = 0.75
+            else:
+                # 其他国家的基础稳定性值
+                political_state["stability"][country] = 0.70
+            
+            # 初始化政府类型
+            if country in self.ideologies["liberal_democracy"]:
+                political_state["governments"][country] = "liberal_democracy"
+            elif country in self.ideologies["authoritarian"]:
+                political_state["governments"][country] = "authoritarian"
+            elif country in self.ideologies["hybrid"]:
+                political_state["governments"][country] = "hybrid"
+            elif country in self.ideologies["theocracy"]:
+                political_state["governments"][country] = "theocracy"
+            elif country in self.ideologies["military"]:
+                political_state["governments"][country] = "military"
+            else:
+                political_state["governments"][country] = "unknown"
+        
+        # 初始化国家间关系
+        for source in self.political_powers:
+            political_state["relations"][source] = {}
+            for target in self.political_powers:
+                if source == target:
+                    # 国家与自身的关系为1.0
+                    political_state["relations"][source][target] = 1.0
+                elif self._are_allies(source, target):
+                    # 盟国关系较好
+                    political_state["relations"][source][target] = 0.7
+                elif self._same_ideology(source, target):
+                    # 相同意识形态关系一般较好
+                    political_state["relations"][source][target] = 0.6
+                else:
+                    # 其他情况的基础关系值
+                    political_state["relations"][source][target] = 0.4
+        
+        return political_state
+    
+    def _are_allies(self, country1: str, country2: str) -> bool:
+        """
+        检查两个国家是否为盟国
+        
+        Args:
+            country1: 第一个国家
+            country2: 第二个国家
+            
+        Returns:
+            是否为盟国
+        """
+        for alliance, members in self.alliances.items():
+            if country1 in members and country2 in members:
+                return True
+        return False
+    
+    def _same_ideology(self, country1: str, country2: str) -> bool:
+        """
+        检查两个国家是否有相同的主要意识形态
+        
+        Args:
+            country1: 第一个国家
+            country2: 第二个国家
+            
+        Returns:
+            是否有相同意识形态
+        """
+        for ideology, countries in self.ideologies.items():
+            if country1 in countries and country2 in countries:
+                return True
+        return False
     
     def evolve(self, political_state: Dict[str, Any], current_time: datetime, 
               economic_state: Optional[Dict[str, Any]] = None,

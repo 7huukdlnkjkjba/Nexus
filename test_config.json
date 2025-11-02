@@ -1,0 +1,66 @@
+{
+  "simulation": {
+    "seed": 42,
+    "initial_year": 2023,
+    "target_year": 2025,
+    "max_timelines": 5,
+    "timeline_pruning_threshold": 0.05,
+    "decision_points_per_year": 2,
+    "save_interval": 1,
+    "output_directory": "test_output_20251102_162734"
+  },
+  "models": {
+    "economic": {
+      "initial_gdp": 100.0,
+      "gdp_growth_volatility": 0.01,
+      "inflation_base_rate": 0.02,
+      "technology_contribution": 0.3,
+      "globalization_factor": 0.7
+    },
+    "political": {
+      "base_stability": 0.75,
+      "conflict_impact": 0.15,
+      "democracy_index": 0.65
+    },
+    "technology": {
+      "base_research_intensity": 0.02,
+      "breakthrough_probability": 0.03,
+      "technology_spillover": 0.7
+    },
+    "climate": {
+      "base_emission_rate": 50.0,
+      "temperature_sensitivity": 0.7,
+      "carbon_budget": 1000.0,
+      "climate_policy_impact": 0.5
+    },
+    "crisis_response": {
+      "max_country_responses_per_event": 3,
+      "max_organization_responses_per_event": 2,
+      "base_response_effectiveness": 0.6
+    },
+    "evaluator": {
+      "survival_weight": 0.6,
+      "value_weight": 0.4,
+      "domain_weights": {
+        "economic": 0.25,
+        "political": 0.25,
+        "technology": 0.25,
+        "climate": 0.25
+      }
+    },
+    "event_system": {
+      "base_event_probability": 0.1,
+      "max_events_per_period": 2,
+      "severity_distribution": {
+        "minor": 0.6,
+        "moderate": 0.3,
+        "major": 0.08,
+        "catastrophic": 0.02
+      }
+    },
+    "timeline_manager": {
+      "cache_size": 100,
+      "prune_frequency": 2
+    }
+  }
+}

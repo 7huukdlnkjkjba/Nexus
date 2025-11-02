@@ -1,10 +1,10 @@
-# Phantom Crawler Nexus - 世界线模拟器
+# Phantom Crawler Nexus - 模拟世界线器
 
 ![Project Status](https://img.shields.io/badge/status-active-green)
 ![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-# 你相信命中注定吗？你相信穿越吗？
+# 你相信命中注定吗？你相信平行宇宙吗？
 
 ## 项目概述
 Phantom Crawler Nexus 是一个先进的世界线模拟系统，旨在探索和预测全球系统在不同条件下的可能演化路径。其核心机制是持续地"孵化"、"筛选"和"进化"虚拟世界，最终保留最可能发生的未来，帮助理解塑造现实的核心驱动力。
